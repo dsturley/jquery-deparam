@@ -21,6 +21,13 @@ describe('jquery-deparam', function(){
     it('serializes objects', function(){
         deparam('prop[prop2]=somestring').prop.should.be.an('object');
     });
+    it('merges duplicate object keys', function(){
+        var obj = deparam('prop[prop2]=somestring&prop[prop2]=anotherstring');
+
+        obj.prop.should.be.an('object');
+        obj.prop.prop2.should.be.an('array');
+        obj.prop.prop2.should.deep.equal(['somestring', 'anotherstring']);
+    });
     it('serializes booleans when coerced', function(){
         deparam('prop=false', true).prop.should.be.a('boolean');
     });

@@ -58,9 +58,10 @@
                 if ( keys_last ) {
                     // Complex key, build deep object structure based on a few rules:
                     // * The 'cur' pointer starts at the object top-level.
-                    // * [] = array push (n is set to array length), [n] = array if n is 
+                    // * [] = array push (n is set to array length), [n] = array if n is
                     //   numeric, otherwise object.
-                    // * If at the last keys part, set the value.
+                    // * If at the last keys part: when a value or array exists, set an 
+                    //   array containing existing data and val, otherwise set the value.
                     // * For each keys part, if the current level is undefined create an
                     //   object or array based on the type of the next keys part.
                     // * Move the 'cur' pointer to the next level.
@@ -69,7 +70,7 @@
                         key = keys[i] === '' ? cur.length : keys[i];
                         cur = cur[key] = i < keys_last
                         ? cur[key] || ( keys[i+1] && isNaN( keys[i+1] ) ? {} : [] )
-                        : val;
+                        : ( cur[key] ? ( $.isArray( cur[key] ) ? cur[key].concat( val ) : [ cur[key], val ] ) : val );
                     }
 
                 } else {
